@@ -1,0 +1,23 @@
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+.ui-tpicker-grid-label { background-color: grey; border: none; margin: 0; padding: 0; }
+
+.ui-timepicker-rtl{ direction: rtl; }
+.ui-timepicker-rtl dl { text-align: right; }
+.ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
+.ui-datepicker-calendar{background-color: red; width: 180px}
+.ui-datepicker-header{background-color: #0a6aa1; width: 180px; color: black}
+.data-handler{color: black}
+.ui-icon-circle-triangle-w{color: black}
+.ui-icon-circle-triangle-e{color: black; float: right}
+.ui-datepicker-month{width: 50%}
+.ui-datepicker-year{width: 50%}
+.ui-state-default{color:black;
+}
+
+
+
+

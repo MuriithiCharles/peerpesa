@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\ActivationService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class LoginController extends Controller
 {
@@ -26,14 +30,53 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/home';
+    protected $activationService;
+
 
     /**
      * Create a new controller instance.
      *
      * @return void
+     *
+     *
      */
-    public function __construct()
+
+    public function authenticated(Request $request, $user)
+    {
+        if (!$user->activated) {
+            $this->activationService->sendActivationMail($user);
+            auth()->logout();
+            return back()->with('warning', 'You need to confirm your account. We have sent you an activation code, please check your email.');
+        }
+        return redirect()->intended($this->redirectPath());
+    }
+
+    public function activateUser($token)
+    {
+        if ($user = $this->activationService->activateUser($token)) {
+           // Auth::guard('organisations')->login($user);
+
+           auth()->login($user);
+            return redirect($this->redirectPath());
+        }
+        abort(404);
+    }
+
+
+    public function activateUser2($token)
+    {if ($user = $this->activationService->activateUser2($token)) {
+       // Auth::guard('organisations')->login($user);
+        auth()->login($user);
+
+
+        return redirect($this->redirectPath());
+    }
+        abort(404);
+
+    }
+
+    public function __construct(ActivationService $activationService)
     {
         $this->middleware('guest', ['except' => 'logout']);
-    }
+        $this->activationService = $activationService;    }
 }

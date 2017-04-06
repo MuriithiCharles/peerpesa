@@ -7,7 +7,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Login</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
+                <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
+               <!-- <form class="form-horizontal" role="form" method="POST" action="{{ route('signin') }}">-->
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
@@ -15,6 +16,17 @@
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
+
+                                @if (session('status'))
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
+@endif
+@if (session('warning'))
+    <div class="alert alert-warning">
+        {{ session('warning') }}
+    </div>
+@endif
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">
@@ -42,7 +54,7 @@
                             <div class="col-md-6 col-md-offset-4">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+                                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : ''}}> Remember Me
                                     </label>
                                 </div>
                             </div>
@@ -54,7 +66,7 @@
                                     Login
                                 </button>
 
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
+                                <a class="btn btn-link" href="{{ url('/password/reset') }}">
                                     Forgot Your Password?
                                 </a>
                             </div>
@@ -65,4 +77,8 @@
         </div>
     </div>
 </div>
+<br><br><br><br><br><br><br><br><br>
+@php(require_once('C:\xampp\htdocs\peerpesa\resources\views\layouts\footer.php') )
+
+
 @endsection

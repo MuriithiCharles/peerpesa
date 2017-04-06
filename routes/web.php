@@ -15,47 +15,126 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-/*Route::group(['middleware' => ['web']], function(){
-	Route::get('/login', ['as' => 'login', 'uses'=>'AuthController@login']);
-	Route::post('/handlelogin', ['as' =>'handlelogin', 'uses' => 'AuthController@handlelogin']);
-	Route::get('/Home', ['middleware'=> 'auth', 'as' => 'Home','uses'=> 'UsersController@Home']);
-    Route::get('/user_home', ['middleware'=> 'auth', 'as' => 'user_home','uses'=> 'UsersController@user_home']);
-    
-	Route::get('/logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
-	Route::resource('users', 'UsersController', ['only' => ['create', 'store']]);
-
+Route::get('/Home', function () {
+    return view('MainHome');
 });
 
-
-
-
-
-
-Route::get('/uploadfile','UploadFileController@index');
-Route::post('/uploadfile','UploadFileController@showUploadFile');
-Route::get('uploadedfile', 'UploadFileController@showUploadFile');*/
 Auth::routes();
 
-Route::get('/home', [ 'as' => 'home', 'uses' => 'HomeController@index']);
-Route::get('/Main_home', [ 'as' => 'Main_home', 'uses' => 'MainHomeController@main']);
-Route::get('rentals', ['as' => 'rentals', 'uses' => 'OurServicesController@rentals']);
-Route::get('guests', ['as' => 'guests', 'uses' => 'OurServicesController@guests']);
-Route::get('meetings', ['as' => 'meetings', 'uses' => 'OurServicesController@meetings']);
-Route::get('recreations', ['as' => 'recreations', 'uses' => 'OurServicesController@recreations']);
+Route::get('/home', 'HomeController@index');
+
+//Route::get('user/activation/{token}', 'Auth\AuthController@activateUser');
+/*Route::group(['middleware' => ['web']], function () {
+  Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+        Route::post('login', 'Auth\LoginController@login');
+        Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+
+        // Registration Routes...
+        Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+        Route::post('register', 'Auth\RegisterController@register');
+
+        Route::get('lenders', 'Auth\RegisterController@showLendersForm')->name('lenders');
+        Route::post('lenders', 'Auth\RegisterController@registerLenders');
 
 
-//payPal code
-Route::group(['middleware' => ['web']], function () {
 
-    Route::get('payPremium', ['as'=>'payPremium','uses'=>'PaypalController@payPremium']);
+        // Password Reset Routes...
+        Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
+        Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+        Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
+        Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+         Route::get('user/activation/{token}', 'Auth\LoginController@activateUser')->name('user.activate');
+         Route::get('user/activation2/{token}', 'Auth\LoginController@activateUser2')->name('user.activate2');
+});*/
+/*
+Route::post('role', 'JwtAuthenticateController@createRole');
+// Route to create a new permission
+Route::post('permission', 'JwtAuthenticateController@createPermission');
+// Route to assign role to user
+Route::post('assign-role', 'JwtAuthenticateController@assignRole');
+// Route to attache permission to a role
+Route::post('attach-permission', 'JwtAuthenticateController@attachPermission');
 
-    Route::post('getCheckout', ['as'=>'getCheckout','uses'=>'PaypalController@getCheckout']);
-
-    Route::get('getDone', ['as'=>'getDone','uses'=>'PaypalController@getDone']);
-
-    Route::get('getCancel', ['as'=>'getCancel','uses'=>'PaypalController@getCancel']);
-
+// API route group that we need to protect
+Route::group(['prefix' => 'api', 'middleware' => ['ability:admin,create-users']], function()
+{
+    // Protected route
+    Route::get('users', 'JwtAuthenticateController@index');
 });
 
+// Authentication route
+Route::post('authenticate', 'JwtAuthenticateController@authenticate');
+*/
 
- 
+Route::group(['middleware' => 'web'], function () {
+    Route::get('/', function () {
+        return view('index');
+    })->name('main');
+
+    Route::get('/Alladmins', [
+        'uses' => 'AppController@getAlladminsPage',
+        'as' => 'alladmins',
+        'middleware' => 'roles',
+        'roles' => ['Admin', 'Accountant', 'HR']
+    ]);
+
+    Route::get('/accountant', [
+        'uses' => 'AppController@getAccountantPage',
+        'as' => 'accountant',
+        'middleware' => 'roles',
+        'roles' => ['Admin', 'Accountant']
+    ]);
+
+    Route::get('/HR', [
+        'uses' => 'AppController@getHRPage',
+        'as' => 'accountant',
+        'middleware' => 'roles',
+        'roles' => ['Admin', 'HR']
+    ]);
+
+    Route::get('/author/generate-article', [
+        'uses' => 'AppController@getGenerateArticle',
+        'as' => 'author.article',
+        'middleware' => 'roles',
+        'roles' => ['Accountant']
+    ]);
+
+    Route::get('/admin', [
+        'uses' => 'AppController@getAdminPage',
+        'as' => 'admin',
+        'middleware' => 'roles',
+        'roles' => ['Admin']
+    ]);
+
+    Route::post('/admin/assign-roles', [
+        'uses' => 'AppController@postAdminAssignRoles',
+        'as' => 'admin.assign',
+        'middleware' => 'roles',
+        'roles' => ['Admin']
+    ]);
+
+    Route::get('/signup', [
+        'uses' => 'AuthController@getSignUpPage',
+        'as' => 'signup'
+    ]);
+
+    Route::post('/signup', [
+        'uses' => 'AuthController@postSignUp',
+        'as' => 'signup'
+    ]);
+
+    Route::get('/signin', [
+        'uses' => 'AuthController@getSignInPage',
+        'as' => 'signin'
+    ]);
+
+    Route::post('/signin', [
+        'uses' => 'AuthController@postSignIn',
+        'as' => 'signin'
+    ]);
+
+    Route::get('/logout', [
+        'uses' => 'AuthController@getLogout',
+        'as' => 'logout'
+    ]);
+});

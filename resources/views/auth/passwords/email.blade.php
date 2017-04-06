@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+<!-- Main Content -->
 @section('content')
 <div class="container">
     <div class="row">
@@ -13,7 +14,7 @@
                         </div>
                     @endif
 
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('password.email') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/password/email') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
@@ -43,4 +44,8 @@
         </div>
     </div>
 </div>
+
+<br><br><br><br><br><br>
+@php(require_once('C:\xampp\htdocs\peerpesa\resources\views\layouts\footer.php') )
+
 @endsection

@@ -1,33 +1,51 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Redirect;;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\User;
+use App\Role;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-	public function login(){
-		
-		return view('auth.login');
-	}
-    
-    public function handlelogin(Request $request){
-    	$this->validate($request, User::$login_validation_rules);
-    	$data = $request->only('email', 'password');
-    	if(\Auth::attempt($data)){
-
-    		
-    		return redirect()->intended('user_home');
-    	}
-    	//return back()->withInput();
-    	//return Redirect::to('login')->with('error', 'You are now logged in.');
-    	return Redirect::back()->withInput()->withErrors(['wrong password! please login again']);
+    public function getSignUpPage()
+    {
+        //return view('auth.signup');
+        return view('auth.register');
     }
-   public function logout(){
-   	\Auth::logout();
-   	return redirect()->route('login');
-   }
+
+    public function getSignInPage()
+    {
+      //  return view('auth.signin');
+        return view('auth.login');
+
+    }
+
+    public function postSignUp(Request $request)
+    {
+        $user = new User();
+        $user->first_name = $request['first_name'];
+        $user->last_name = $request['last_name'];
+        $user->email = $request['email'];
+        $user->password = $request['password'];
+        $user->save();
+        $user->roles()->attach(Role::where('name', 'User')->first());
+        Auth::login($user);
+        return redirect()->route('main');
+    }
+
+    public function postSignIn(Request $request)
+    {
+        if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
+            return redirect()->route('main');
+        }
+        return redirect()->back();
+    }
+
+    public function getLogout()
+    {
+        Auth::logout();
+        return redirect()->route('main');
+    }
 }

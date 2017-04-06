@@ -45,6 +45,12 @@ return [
             'driver' => 'token',
             'provider' => 'users',
         ],
+
+
+      /*  'organisations' => [
+            'driver' => 'session',
+            'provider' => 'organisations',
+        ],*/
     ],
 
     /*
@@ -74,6 +80,10 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+       /* 'organistions' => [
+            'driver' => 'eloquent',
+            'model' => App\Organisation::class,
+        ],*/
     ],
 
     /*
@@ -97,6 +107,12 @@ return [
             'table' => 'password_resets',
             'expire' => 60,
         ],
+
+      /*  'organisations' => [
+            'provider' => 'organistions',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],*/
     ],
 
 ];
